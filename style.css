@@ -59,4 +59,5 @@ body {
   font-size: 1.2em;
   color: #999; /* 클리어(지우기) 버튼 색상 */
   margin-right: 5px; /* 돋보기 아이콘과 입력 필드 사이 간격 */
+  display: none; /* 초기에는 클리어(지우기) 버튼을 숨김 */
 }

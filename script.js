@@ -11,12 +11,25 @@ const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
 const clearBtn = document.querySelector('.clear-btn');
 
+
+// 입력 필드에 입력 내용이 변경될 때마다 실행되는 이벤트 리스너
+searchInput.addEventListener('input', function () {
+  if (searchInput.value.trim() === '') {
+      // 입력 내용이 없으면 X 버튼을 숨깁니다.
+      clearBtn.style.display = 'none';
+  } else {
+      // 입력 내용이 있으면 X 버튼을 표시합니다.
+      clearBtn.style.display = 'block';
+  }
+});
+
 // Clear Search Bar
 clearBtn.addEventListener('click', () => {
   searchInput.value = '';
   searchInput.focus();
 
-  // x button disappears 기능 추가 필요
+  // x button disappears
+  clearBtn.style.display = 'none';
 });
 
 // searchFunction
@@ -132,9 +145,6 @@ function renderDataToHTML(data) {
     // 최종적으로 단어의 뜻과 예시를 HTML에 출력
     meanTray.appendChild(mean);
   }
-
-
-
 
 }
 
