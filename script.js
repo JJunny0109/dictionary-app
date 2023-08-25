@@ -94,6 +94,7 @@ function callAPI(word) {
       // 검색결과가 없음을 사용자에게 알림 추후에 애니메이션 추가 필요 + 메시지 박스 보이기 기능 추가
       messageBox.textContent = `단어 '${word}'에 대한 검색결과가 없습니다.`;
       messageBox.style.display = 'block';
+      loadingBox.style.display = 'none';
     }
   })
   .catch(error => {
@@ -117,9 +118,15 @@ function renderDataToHTML(data) {
   let fetchedWord = {
     word: data.channel.item.word_info.word, // 말 그대로 단어 : 먹다, 물, 나무 등
     wordType: data.channel.item.word_info.word_type, // 고유어, 한자어 등
-    pronunciation: data.channel.item.word_info.pronunciation_info[0].pronunciation, // 발음 : 읇다 = [읍따]
     wordClass: data.channel.item.word_info.pos_info[0].pos, // 품사 : 동사, 명사, 형용사 등
     meanArr: data.channel.item.word_info.pos_info[0].comm_pattern_info[0].sense_info, // 배열인데 단어의 정의를 넣음 : 나무 = [줄기나 가지가 목질로 된 여러해살이 식물.,집을 짓거나 가구, 그릇 따위를 만들 때 재료로 사용하는 재목. 등등]
+  }
+
+  // 발음이 존재하는 경우, 없으면 그대로 출력
+  if (data.channel.item.word_info.pronunciation_info) {
+    fetchedWord.pronunciation = data.channel.item.word_info.pronunciation_info[0].pronunciation; // 발음 : 읇다 = [읍따]
+  } else {
+    fetchedWord.pronunciation = fetchedWord.word;
   }
   console.log('fetchedWord:', fetchedWord);
 
@@ -144,11 +151,15 @@ function renderDataToHTML(data) {
     meanTray.appendChild(mean);
 
     // 단어의 예시를 출력할 HTML 요소를 생성
-    const ulEl = document.createElement('ul');
-    ulEl.classList.add('example');
     const example = document.createElement('li');
-    example.textContent = fetchedWord.meanArr[i].example_info[0].example;
-    ulEl.appendChild(example);
+    const ulEl = document.createElement('ul');
+    
+    // 예시가 존재하는지 판별
+    if (fetchedWord.meanArr[i].example_info){
+      ulEl.classList.add('example');
+      example.textContent = fetchedWord.meanArr[i].example_info[0].example;
+      ulEl.appendChild(example);
+    }
     mean.appendChild(ulEl);
 
   }

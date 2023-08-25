@@ -76,3 +76,12 @@ body {
 .lower {
   display: none; /* 초기에는 숨김 */
 }
+
+.searched-word {
+  font-size: 2em;
+  padding-top: 1rem;
+}
+
+.mean {
+  padding: 1rem;
+}
