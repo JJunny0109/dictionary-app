@@ -61,3 +61,18 @@ body {
   margin-right: 5px; /* 돋보기 아이콘과 입력 필드 사이 간격 */
   display: none; /* 초기에는 클리어(지우기) 버튼을 숨김 */
 }
+
+.message-box {
+  display: none; /* 초기에는 메시지 박스를 숨김 */
+}
+
+.loading-box {
+  display: none; /* 초기에는 로딩 박스를 숨김 */
+}
+
+
+/* 아래부터 .lower 영역의 스타일을 설정합니다. */
+/* .lower 요소 설정 */
+.lower {
+  display: none; /* 초기에는 숨김 */
+}

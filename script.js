@@ -10,6 +10,9 @@ const API = {
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
 const clearBtn = document.querySelector('.clear-btn');
+const messageBox = document.querySelector('.message-box');
+const loadingBox = document.querySelector('.loading-box');
+const lowerArea = document.querySelector('.lower');
 
 
 // 입력 필드에 입력 내용이 변경될 때마다 실행되는 이벤트 리스너
@@ -30,6 +33,7 @@ clearBtn.addEventListener('click', () => {
 
   // x button disappears
   clearBtn.style.display = 'none';
+  messageBox.style.display = 'none';
 });
 
 // searchFunction
@@ -38,6 +42,8 @@ function searchWord() {
   if (word === '') {
     alert('Please enter a word');
   } else {
+    loadingBox.style.display = 'block';
+    messageBox.style.display = 'none';
     callAPI(word);
   }
 }
@@ -80,13 +86,14 @@ function callAPI(word) {
     if(data.channel.item) {
       console.log('API로부터 가져온 데이터:', data);
       // 데이터 처리 또는 반환하는 추가 작업 수행
+      lowerArea.style.display = 'block';
       renderDataToHTML(data);
     } else {
       console.log('존재하지 아니한 단어입니다.');
 
-      // // 검색결과가 없음을 사용자에게 알림 추후에 애니메이션 추가 필요 + 메시지 박스 보이기 기능 추가
-      // const messageBox = document.querySelector('.message-box');
-      // messageBox.textContent = `단어 '${word}'에 대한 검색결과가 없습니다.`;
+      // 검색결과가 없음을 사용자에게 알림 추후에 애니메이션 추가 필요 + 메시지 박스 보이기 기능 추가
+      messageBox.textContent = `단어 '${word}'에 대한 검색결과가 없습니다.`;
+      messageBox.style.display = 'block';
     }
   })
   .catch(error => {
@@ -119,7 +126,7 @@ function renderDataToHTML(data) {
   // HTML에서 .lower에 단어, 발음 그리고 품사를 출력
   searchedWord.textContent = fetchedWord.word;
   pronunciation.textContent = `[${fetchedWord.pronunciation}]`;
-  wordClass.textContent = fetchedWord.wordClass;
+  wordClass.textContent = `${fetchedWord.wordClass} ${fetchedWord.wordType}`;
 
   // HTML에서 .lower .mean-tray에 단어의 뜻 or 정의 and 예시를 출력
   // 기존의 단어의 뜻을 출력하는 HTML 요소를 삭제
@@ -133,7 +140,9 @@ function renderDataToHTML(data) {
     const mean = document.createElement('li');
     mean.classList.add('mean');
     mean.textContent = fetchedWord.meanArr[i].definition;
-    
+    // 단어의 뜻과 예시를 HTML에 출력
+    meanTray.appendChild(mean);
+
     // 단어의 예시를 출력할 HTML 요소를 생성
     const ulEl = document.createElement('ul');
     ulEl.classList.add('example');
@@ -142,10 +151,8 @@ function renderDataToHTML(data) {
     ulEl.appendChild(example);
     mean.appendChild(ulEl);
 
-    // 최종적으로 단어의 뜻과 예시를 HTML에 출력
-    meanTray.appendChild(mean);
   }
-
+  loadingBox.style.display = 'none';
 }
 
 // Event Listeners for Search Bar
